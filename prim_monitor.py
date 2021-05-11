@@ -1,5 +1,6 @@
 from collections import deque
 from data_structures import HEAP_MIN , GRAPH
+from sys import maxsize
 
 #GLOBAL VARIABLE VISIBLE BY FILE ONLY ------------------------------------------------
 END      = -1
@@ -7,9 +8,13 @@ SELECT   = 0
 CONSIDER = 1
 UPDATE   = 2
 global_status = SELECT
-Possible_neighbors = deque([])
+
+FUN_DICT = dict( )
+# UNVISITED = set( )
+
 Adj_lst = dict()
-E_val = dict()
+P = dict()
+H = HEAP_MIN( 10**6 )
 
 #GLOBAL VARIABLE VISIBLE BY OUTSIDERS------------------------------------------------
 CONSIDERED = 0
@@ -17,98 +22,91 @@ REJECTED   = 1
 ACCEPTED   = 2
 edge_status = CONSIDERED
 current_edge = ( -1 , -1 )
-Va = set()
-Ea = set()
 
-#AUXILIARY FUNCTIONS ---------------------------------------------------------------
-def intercal( arr1 , arr2 , foo ):
-
-    i , j = 0 , 0
-    seq = []
-
-    while i < len( arr1 ) or j < len( arr2 ):
-
-        if i >= len( arr1 ):
-            seq.append( arr2[ j ] )
-            j += 1
-        elif j >= len( arr2 ):
-            seq.append( arr1[ i ] )
-            i += 1
-        elif foo( arr1[ i ] ) < foo( arr2[ j ] ):
-            seq.append( arr1[ i ] )
-            i +=1
-        else:
-            seq.append( arr2[ j ] )
-            j += 1
-    
-    return seq
+A = GRAPH()
+G = GRAPH()
 
 #MONITOR FUNCTIONS------------------------------------------------------------------
 
 def _select_fun():
 
-    global Possible_neighbors , current_edge, edge_status , global_status
-    current_edge = Possible_neighbors.popleft()
-    edge_status = CONSIDERED
-    global_status = CONSIDER 
+    global global_status
+    global_status = CONSIDER if H else END
 
 def _consider_fun():
 
-    global edge_status, global_status
-    a , b = current_edge
-    r1 = a in Va
-    r2 = b in Va
-    edge_status = ACCEPTED if r1^r2 else REJECTED
+    global global_status
     global_status = UPDATE
 
 def _update_fun():
 
-    global global_status
-    if edge_status == ACCEPTED:
-  
-        global Ea, Va
-        Ea.add( current_edge )
-        ( a , b ) = current_edge
-        y = a if b in Va else b
-        Va.add( y )
-
-        global Adj_lst, E_val, Possible_neighbors
-        new_edges = [ tup for tup in Adj_lst[ y ] if tup != ( a , b ) ]
-        Possible_neighbors = deque( intercal( Possible_neighbors , new_edges , lambda x: E_val[ x ] ) )
+    x , _  = H.pop()
+    for y in Adj_lst[ x ]:
+        a = -1 if H[ y ] is None else H[ y ]
+        if G.edge_val( x , y ) < a:
+            H[ y ] = G.edge_val( x , y )
+            P[ y ] = x
     
-    global_status = END if len( Possible_neighbors ) == 0 else SELECT
+    A.add_node( x )
+    y = P[ x ]
+    if not( y is None ):
+        A.add_node( y )
+        w = G.edge_val( x , y )
+        A.add_edge( x , y , w )
+
+    global global_status
+    global_status = SELECT
 
 def _init( V , E ):
 
-    global E_val
-    E_val = E
+    FUN_DICT[ SELECT ]   = _select_fun
+    FUN_DICT[ CONSIDER ] = _consider_fun
+    FUN_DICT[ UPDATE ]   = _update_fun
 
-    E_set = list( tup for tup in E )
-    E_set.sort( key = lambda x: E[ x ] )
+    G.nodes = V
+    G.edges = E
 
-    global Adj_lst
-    for edge in E_set:
-        ( a , b ) = edge
-        Adj_lst[ a ] = Adj_lst.get( a , [] ) + [ edge ]
-        Adj_lst[ b ] = Adj_lst.get( b , [] ) + [ edge ]
-    
-    global Possible_neighbors , Va, Ea
-    Possible_neighbors.extend( Adj_lst[ a ] )
-    Va.add( a )
+    global Adj_lst, H , P
+    Adj_lst = G.Adj_tab()
+    for x in G.nodes:
+        H[ x ] = maxsize
+        P[ x ] = None
+    root = G.rand_node()
+    H[ root ] = 0 
+
 
 def get_variables():
 
-    return( edge_status , current_edge , Va.copy() , Ea.copy() )
+    return( A.nodes , A.edges )
 
 def _next():
 
     if global_status == END:
         return False
 
-    if global_status == SELECT:
-        _select_fun()
-    elif global_status == CONSIDER:
-        _consider_fun()
-    elif global_status == UPDATE:
-        _update_fun()
+    f = FUN_DICT[ global_status ]
+    f()
     return True
+
+if __name__ == "__main__":
+
+    V = set( ["a" , "b" , "c" , "d", "e" ] )
+    E = {
+        ('a','b'):2,
+        ('a','c'):3,
+        ('a','d'):4,
+        ('c','d'):1,
+        ('b','d'):2,
+        ('d','e'):7,
+        ('c','e'):3,
+        ('a','e'):2
+    }
+
+    _init( V , E )
+    while _next():
+        if global_status == UPDATE:
+            input()
+            print( "-"*25 )
+            print( A )
+    print( A )
+    pass

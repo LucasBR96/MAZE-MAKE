@@ -7,6 +7,16 @@ class GRAPH:
     def __init__( self ):
         self.nodes = set()
         self.edges = dict()
+    
+    def __str__( self ):
+
+        s_nodes = "nodes: " + " ".join( str( x ) for x in self.nodes )
+        s_edges = "edges: "
+        for ( x , y ) , w in self.edges.items():
+            s_iter = "{} | {} -> {}".format( x , y , w )
+            s_edges += "\n" + s_iter
+        
+        return s_nodes + "\n\n" + s_edges
 
     def add_node( self , x ):
         self.nodes.add( x )
@@ -100,7 +110,7 @@ class FCD:
     
 class HEAP_MIN:
 
-    def __init__( self , n ):
+    def __init__( self , n = 10**3 ):
 
         self.key2val = dict()
         self.key2rank = dict()

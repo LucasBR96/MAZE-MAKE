@@ -7,6 +7,8 @@ CONSIDER = 1
 UPDATE   = 2
 global_status = SELECT
 
+FUN_DICT = dict( )
+
 E_prime = []
 T = FCD(10**5)
 
@@ -17,8 +19,8 @@ ACCEPTED   = 2
 edge_status = CONSIDERED
 current_edge = ( -1 , -1 )
 
-Va = set()
-Ea = set()
+A = GRAPH( )
+G = GRAPH( )
 UNVISITED = set()
 
 N = 0
@@ -49,9 +51,11 @@ def _update_fun( ):
     global Va, Ea, current_edge, edge_status, T, global_status, UNVISITED
     if edge_status == ACCEPTED:
         ( x , y ) = current_edge
-        Va.add( x )
-        Va.add( y )
-        Ea.add( ( x , y ) )
+        A.add_node( x )
+        A.add_node( y )
+
+        w = G.edge_val( x , y )
+        A.add_edge( x , y , w )
         
         UNVISITED -= { x , y }
     
@@ -61,6 +65,10 @@ def _update_fun( ):
 
 def _init( V , E ):
 
+    FUN_DICT[ SELECT ] = _select_fun
+    FUN_DICT[ CONSIDER ] = _consider_fun
+    FUN_DICT[ UPDATE ] = _update_fun
+
     global E_prime , N
     E_prime = [ tup for tup in E ]
     E_prime.sort( key = lambda x : E[ x ] )
@@ -68,21 +76,43 @@ def _init( V , E ):
 
     global T, UNVISITED
     for x in V: T.make_set( x )
-    UNVISITED = V.copy()    
+    UNVISITED = V.copy()
+
+    G.nodes = V
+    G.edges = E    
 
 def _next( ):
 
     if global_status == END:
         return False
 
-    if global_status == SELECT:
-        _select_fun()
-    elif global_status == CONSIDER:
-        _consider_fun()
-    elif global_status == UPDATE:
-        _update_fun()
+    f = FUN_DICT[ global_status ]
+    f()
     return True
 
 def get_variables():
 
-    return( edge_status , current_edge , Va.copy() , Ea.copy() )
+    return A.nodes , A.edges
+
+if __name__ == "__main__":
+
+    V = set( ["a" , "b" , "c" , "d", "e" ] )
+    E = {
+        ('a','b'):2,
+        ('a','c'):3,
+        ('a','d'):4,
+        ('c','d'):1,
+        ('b','d'):2,
+        ('d','e'):7,
+        ('c','e'):3,
+        ('a','e'):2
+    }
+
+    _init( V , E )
+    while _next():
+        if global_status == UPDATE:
+            input()
+            print( "-"*25 )
+            print( A )
+    print( A )
+    pass
