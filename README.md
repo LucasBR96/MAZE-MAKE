@@ -3,7 +3,7 @@
 The purpose of this project is the craetion of a simple animation that generates a random maze 
 using a MST algorithm.
 
-## What is MST?
+## What is a MST?
 
 MST stands for *Minimum Spanning Tree*, a classic problem of graph theory. Given a graph **G( V , E )**
 that is positive weighted and non-directional, find the subgraph **A( Va , Ea )** in **G** that fits the three
@@ -28,13 +28,50 @@ for every edge of **G**, ascending order on weight, if the such edge bridges two
 trees of the split. If it does, then the trees are merged back together.
 
 ```
-pseudo codigo aqui
+MST-KRUSKAL( G , w )
+
+    // 1
+    F = DIS-SETS( )
+    for v in G.V
+        F.MAKE-SET( v )
+
+    // 2
+    E' = SORT( G.E , w )
+
+    A = GRAPH( )
+    for u , v in E'
+        S1 = F.GET-SET( u )
+        S2 = F.GET-SET( v )
+        if S1 == S2: continue
+
+        // 3
+        F.MERGE( S1 , S2 )
+        
+        // 4
+        if not ( v in A.V )
+            A.V = A.V + { v }
+        if not ( u in A.V )
+            A.V = A.V + { u }
+        
+        A.E = A.E + { ( u , v ) }
+    return A
 ```
 
-```
-explicacao aqui
-```
+1. F is a data structure that represents **disjoint** sets.( where any pair of two sets in F have no 
+common element. ) The details regarding its implementation are not really relevant for the project.
+But, if you are interested, you can take look at [CORM09] chapter 21, as this is the implementation
+used in the project.
 
+2. Sorting the edges in ascending order by weight.
+
+3. If the edge is valid, the sets S1 and S2 must be merged, so no other edge that conects those sets
+can be considered valid in the future.
+
+4. At least one of the nodes is not part of A, but it is not known whicht, so it is necessary to check
+them both before adding to A in order to avoid duplicate, unless the data structure used to represent
+the set of nodes in a Graph already handles this.
+
+The following gif is an example of Kruskal implementation.
 ```
 gif aqui
 ```
@@ -48,7 +85,23 @@ A. So at each iteration the node with the smallest weight is removed from S and 
 is updated.
 
 ```
-pseudo codigo aqui
+MST-PRIM( G , w , r )
+    for each u in G.V
+        u.key = inf
+        u.parent = NULL
+    r.key = 0
+    Q = COPY( G.V )
+    While Q
+        u = EXTRACT-MIN( Q )
+        for each v in G.Adj[ u ]
+            if ( v in Q ) and w( u , v ) < v.key
+                v.key = w( u , v )
+                v.parent = u
+    A = Graph()
+    for v in G.V
+        A.V = A.V + { v }
+        A.E = A.E + { ( v , v.parent ) }
+    return A
 ```
 
 ```
