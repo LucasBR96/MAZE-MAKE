@@ -86,10 +86,14 @@ is updated.
 
 ```
 MST-PRIM( G , w , r )
+
+    // 1 ------------------------------------------------
     for each u in G.V
         u.key = inf
         u.parent = NULL
     r.key = 0
+
+    // 2 ------------------------------------------------
     Q = COPY( G.V )
     While Q
         u = EXTRACT-MIN( Q )
@@ -97,6 +101,8 @@ MST-PRIM( G , w , r )
             if ( v in Q ) and w( u , v ) < v.key
                 v.key = w( u , v )
                 v.parent = u
+    
+    // 3 ------------------------------------------------
     A = Graph()
     for v in G.V
         A.V = A.V + { v }
@@ -104,9 +110,21 @@ MST-PRIM( G , w , r )
     return A
 ```
 
-```
-explicacao aqui
-```
+1. You must be thinking: "This guy just told me about some candidate set S. But I see no such set, is he nuts?". Well, 
+S is implicitly given by **key** , **parent** and **Q**.
+   - **key** and **parent** are values associated to each node of G, meaning, respectively, the minimum
+   cost to connect the given node to the tree and the node already in the tree that gives this cost. So,
+   infinite key and null parent means that the node is not yet member of the candidate set.
+   - **r** is the root of A, or the first node in A. Since he is the only node in the beginning he doesn't need
+   a parent and his cost is zero.
+   - **Q** is the set of nodes in G that are yet to be part of A. If a node is in Q but his parent is still null,
+   it means he is yet to be part of the candidate set.
+
+2. **EXTRACT-MIN** removes the node wtih the smallest value for key from set Q. When a node is removed from there
+it means that is now part of the tree. So, when added, the candidate set must be updated.
+
+3. Now that every node has a proper parent, we can say that the tree spans all the graph. So now the only thing that needs
+to be done is to pass each node to A.
 
 ```
 gif aqui
