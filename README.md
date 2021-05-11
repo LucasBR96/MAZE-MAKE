@@ -9,9 +9,9 @@ MST stands for *Minimum Spanning Tree*, a classic problem of graph theory. Given
 that is positive weighted and non-directional, find the subgraph **A( Va , Ea )** in **G** that fits the three
 following rules:
 
-    1 - A have all nodes of G, i.e Va == V 
-    2 - A is a Tree, i.e have no cicles
-    3 - The total weight of A is the smallest possible.
+* A have all nodes of G, i.e Va == V 
+* A is a Tree, i.e have no cicles
+* The total weight of A is the smallest possible.
 
 the picture bellow gives a good example:
 
@@ -87,10 +87,10 @@ python.exe maze_make.py row col seed algo
 ```
 
 *row* *col* *seed* and *algo* are four distinct integers, each one meaning:
-    row -> number of horizontal lines. ( Between 2 and 80 )
-    col -> number of vertical lines.   ( Between 2 and 80 )
-    seed -> the seed for the rng       ( any value )
-    algo -> the choosen algorithm, 1 for prim and 0 for kruskall
+* row -> number of horizontal lines. ( Between 2 and 80 )
+* col -> number of vertical lines.   ( Between 2 and 80 )
+* seed -> the seed for the rng       ( any value )
+* algo -> the choosen algorithm, 1 for prim and 0 for kruskall
 
 Also, it is possible to manipulate the speed of the animation using the left and right arrow
 keys. The speed is a integer between 1 and 10 inclusive, with default value of 5, and that indicates
