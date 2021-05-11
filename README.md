@@ -15,9 +15,7 @@ following rules:
 
 the picture bellow gives a good example:
 
-```
-imagem aqui 
-```
+![Sem título](https://user-images.githubusercontent.com/36990809/117898447-5de69680-b29b-11eb-9c7c-f801a23eca0d.png)
 
 The two algorithms described bellow are the most known for solving the MST problem.
 
