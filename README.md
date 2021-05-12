@@ -13,9 +13,11 @@ following rules:
 * A is a Tree, i.e have no cicles
 * The total weight of A is the smallest possible.
 
-the picture bellow gives a good example:
+the pictures bellow give a good example, the thick black lines of the second picture represent the edges selected for the MST:
 
 ![Sem título](https://user-images.githubusercontent.com/36990809/117898447-5de69680-b29b-11eb-9c7c-f801a23eca0d.png)
+
+![Sem título](https://user-images.githubusercontent.com/36990809/117898938-7d31f380-b29c-11eb-962a-4c1210b85b25.png)
 
 The two algorithms described bellow are the most known for solving the MST problem.
 
