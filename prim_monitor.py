@@ -10,7 +10,6 @@ UPDATE   = 2
 global_status = SELECT
 
 FUN_DICT = dict( )
-# UNVISITED = set( )
 
 Adj_lst = dict()
 P = dict()
