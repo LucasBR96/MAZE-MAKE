@@ -71,10 +71,10 @@ can be considered valid in the future.
 them both before adding to A in order to avoid duplicate, unless the data structure used to represent
 the set of nodes in a Graph already handles this.
 
-The following gif is an example of Kruskal implementation.
-```
-gif aqui
-```
+The following gif is an example of Kruskal implementation, here the weight is given by the euclidian
+distance of two points [SHJ16]
+
+![KruskalDemo](https://user-images.githubusercontent.com/36990809/118532236-1b9ada80-b71d-11eb-9765-f6d7af927a64.gif)
 
 ### Prim
 
@@ -126,9 +126,9 @@ it means that is now part of the tree. So, when added, the candidate set must be
 3. Now that every node has a proper parent, we can say that the tree spans all the graph. So now the only thing that needs
 to be done is to pass each node to A.
 
-```
-gif aqui
-```
+This gif also defines the weight as euclidian distance. So it's the same problem but solved by prim.
+
+![PrimAlgDemo](https://user-images.githubusercontent.com/36990809/118532046-ea220f00-b71c-11eb-8046-0815cc350021.gif)
 
 ## The Maze itself
 
