@@ -163,9 +163,11 @@ python.exe maze_make.py row col seed algo
 * seed -> the seed for the rng       ( any value )
 * algo -> the choosen algorithm, 1 for prim and 0 for kruskall
 
-Also, it is possible to manipulate the speed of the animation using the left and right arrow
+It is possible to manipulate the speed of the animation using the left and right arrow
 keys. The speed is a integer between 1 and 10 inclusive, with default value of 5, and that indicates
 the number of new walls added per frame. 
+
+Finaly, it is possible to pause/unpause the animation using the spacebar.
 
 ## References
 
