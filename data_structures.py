@@ -178,20 +178,32 @@ class HEAP_MIN:
     def __setitem__( self , k , val ):
         
         #--------------------------------------------------
-        # if no
+        # basically, this data structure is made to look like
+        # a dict. So the line:
+        #
+        # H[ x ] = 100
+        #
+        # Could mean either "insert x on the heap and set value
+        # 100" or "find key x and set value 100". The line bellow is
+        # an edge case for insertion: the heap is already full.
         if not( k in self.key2val ) and self.total >= self.max_size:
             return False
         
+        #--------------------------------------------------
+        # Now it is just adding a new one
         if not( k in self.key2val ):
 
             self.total += 1
-            t = self.total
+            t = self.total # new rank
             self.key2rank[ k ] = t
             self.rank2key[ t ] = k
 
         old = self.key2val.get( k , sys.maxsize )
         self.key2val[ k ] = val
-
+        
+        #------------------------------------------------
+        # Since it is a min heap, if the new value is lesser
+        # than the old, it must go up. Down otherwise.
         fun = self._up
         if val >= old:
             fun = self._down
