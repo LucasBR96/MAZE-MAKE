@@ -3,7 +3,10 @@ import random
 import sys
 
 class GRAPH:
-
+    
+    #--------------------------------------------------
+    # Rudimentary implementation of graph functions as
+    # a Class. Represents weighted, undirected graphs.
     def __init__( self ):
         self.nodes = set()
         self.edges = dict()
@@ -22,6 +25,10 @@ class GRAPH:
         self.nodes.add( x )
     
     def add_edge( self , u , v , w ):
+        
+        if u > v : u , v = v , u
+        if self.edge_val( u , v ) is not None:
+            return
         self.edges[ ( u , v ) ] = w
     
     def dim( self ):
@@ -34,11 +41,21 @@ class GRAPH:
         if ( u , v ) in self.edges:
             return self.edges[ ( u , v ) ]
         
+        #--------------------------------------------------
+        # ( u , v ) = ( v , u ). To avoid redundancy only ( u , v ) is
+        # stored.
         if ( v , u ) in self.edges:
             return self.edges[ ( v , u ) ]
         
-    def Adj_tab( self ):
+        # edge dos not exist
+        return None
 
+    def Adj_tab( self ):
+        
+        #--------------------------------------------------
+        # returns the adjency table of the graphs. Each entry
+        # is a node, and the nodes of the graph that are conected
+        # to it.
         A = dict()
         for u , v in self.edges:
             A[ u ] = A.get( u , [] ) + [ v ]
@@ -51,17 +68,37 @@ class GRAPH:
 class FCD:
 
     def __init__( self, max_elements ):
+        
+        #--------------------------------------------------
+        # This data structure is not very widespread. But it
+        # interesting to use in the kruskal algorithm as it 
+        # represents a forest of disjoint sets. ( sets where no
+        # not two of them have a common value ).
 
-        self.keys = set()
+        # Each set is represented by a tree ( hence forest ) and
+        # each node of the tree points to its parent node, all the
+        # way to the root. Each node has a counter with the number 
+        # of nodes of the tree rooted by it. 
+        
+        # the values themselves. 
+        self.keys    = set()
+
+        # who each node point to.
         self.parents = dict()
-        self.rank    = dict()
 
+        # the amount of descendants.
+        self.rank    = dict()
+        
+        # total number of elements
         self.t = 0
         self.max_elem = max_elements
 
         self.full = lambda : ( self.t >= self.max_elem )
 
     def make_set( self , x ):
+
+        #---------------------------------------------------
+        # adding a new element means creating a new tree
 
         if self.full():
             return False
@@ -72,44 +109,61 @@ class FCD:
         self.rank[ x ] = 0
         return True
 
-    def _push( self , x ):
+    def __getitem__( self , x ):
+        
+        #--------------------------------------------------
+        # getting the set which the element belongs, if the element
+        # is in the forest.
 
-        par = [ x ]
-        while True:
-            pos = par.pop()
-            y = self.parents[ pos ]
-            if y == pos:
-                root = y
-                break
-            par.append( pos ) 
-            par.append( y ) 
+        if x not in self.keys:
+            return None
 
+        if self.parents[ x ] == x: return x
+        pivot = self.parents[ x ]
+        while pivot != self.parents[ pivot ]:
+            pivot = self.parents[ pivot ]
+        return pivot
+
+    def flat( self , x ):
+        
+        if self[ x ] is None or self[ x ] == x:
+            return
+        
+        root = self[ x ]
         rk_sum = 0 
-        for i , x in enumerate( par[ : -1 ] ):
+        while selr.parent[ x ] != root
             self.parents[ x ] = root
             aux = self.rank[ x ]
             self.rank[ x ] -= rk_sum
             rk_sum += aux + 1
 
-    def __getitem__( self , x ):
-        if self.parents[ x ] == x: return x
-        self._push( x )
-        return self.parents[ x ]
     
     def merge( self , x , y ):
 
-        x = self[ x ]
-        y = self[ y ]
-
-        r1 , r2 = self.rank[ x ] , self.rank[ y ]
-        t = x if r1 > r2 else y
+        self.flat( x )
+        self.flat( y )
+        r1 , r2 = self.rank[ self[ x ] ] , self.rank[ self[ y ] ]
+        t = self[ x ] if r1 > r2 else self[ y ]
         t_men = y if t == x else x
 
         self.parents[ t_men ] = t
         self.rank[ t ] = r1 + r2 + 1
     
 class HEAP_MIN:
-
+    
+    #--------------------------------------------------
+    # heap min implementation using three dicts. Working that
+    # way it can search elements in the heap in O( 1 ) time.
+    # 
+    # each entry in this heap have three variables:
+    #
+    # 1 - key: what is actually being stored in the heap, things
+    # lik SSNs, Names, Graph nodes, etc.
+    #
+    # 2 - val: The score for each key. It can be recovered like
+    # a dict, and it is used to compute the ...
+    #
+    # 3 - rank: The position of the pair ( key , val ) in the heap
     def __init__( self , n = 10**3 ):
 
         self.key2val = dict()
@@ -122,7 +176,9 @@ class HEAP_MIN:
         return self.key2val.get( k , None )
     
     def __setitem__( self , k , val ):
-
+        
+        #--------------------------------------------------
+        # if no
         if not( k in self.key2val ) and self.total >= self.max_size:
             return False
         
