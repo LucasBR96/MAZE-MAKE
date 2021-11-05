@@ -47,10 +47,24 @@ def WFS( G ):
             yield ( x , y )
             unvisited.discard( y )
             queue.append( y )
-
     
-def Kruskal( V , E ):
-    yield None
+def Kruskal( G ):
+    
+    F = FCD( len( G.nodes ) )
+    for u in G.nodes:
+        F.make_set( u )
+    
+    edge_list = list( G.edges.keys() )
+    edge_list.sort( key = lambda ( x , y ): G.edge_val( x , y ) )
+    for u , v in edge_list:
+
+        A = F[ u ]
+        B = F[ v ]
+        if A != B:
+            F.merge( u , v )
+            yield ( u , v )
+
+
     
 def Prim( V , E ):
     yield None
