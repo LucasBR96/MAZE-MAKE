@@ -212,26 +212,32 @@ class HEAP_MIN:
         return True
     
     def __len__( self ): return self.total
-
-    def pop( self ):
-
-        u = self.rank2key[ 1 ]
-        val = self.key2val[ u ]
-        self.key2val.pop( u )
-        self.key2rank.pop( u )
+    
+    def remove( self , x ):
         
-        v = self.rank2key[ self.total ]
-        self.rank2key.pop( self.total )
+        if self[ x ] is None:
+            return
+        
+        #--------------------------------------------------
+        # when removing. The key must be pushed to the bottom
+        # of the heap. For that we set its value equal to the
+        # max integer of the system
+        self[ x ] = sys.maxsize
+        t = self.total
         self.total -= 1
 
-        if self.total != 0: 
-            self.rank2key[ 1 ] = v
-            self.key2rank[ v ] = 1
+        self.rank2key.pop( t )
+        self.key2rank.pop( x )
+        self.key2val.pop( x )
 
-            self._down( v )
-            
-        return ( u , val )
+    def pop( self ):
+        
+        if self.total == 0: return
+        k = self.rank2key[ 1 ]
+        v = self.key2val[ k ]
 
+        self.remove( k )
+        return ( k , v )
     def _up( self , k ):
         
         val = self.key2val[ k ]
