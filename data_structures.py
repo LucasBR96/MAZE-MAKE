@@ -238,6 +238,7 @@ class HEAP_MIN:
 
         self.remove( k )
         return ( k , v )
+
     def _up( self , k ):
         
         val = self.key2val[ k ]
@@ -250,7 +251,10 @@ class HEAP_MIN:
 
             if parent_val <= val:
                 break
-
+            
+            #--------------------------------------------------
+            # exchanging ranks, as the parent takes place of 
+            # the node
             parent_rank , rank = rank , parent_rank 
             self.key2rank[ k ] = rank
             self.rank2key[ rank ] = k
