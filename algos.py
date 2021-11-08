@@ -63,9 +63,32 @@ def Kruskal( G ):
         if A != B:
             F.merge( u , v )
             yield ( u , v )
-
-
     
-def Prim( V , E ):
-    yield None
+def Dijkstra( G ):
+   
+    parent   = { u : None for u in G.nodes }
+
+    min_cost = HEAP_MIN( len( G.nodes ) )
+    root = G.rand_node()
+    min_cost[ root ] = 0
+    for u in G.nodes:
+        if u == root: continue
+        min_cost[ u ] = sys.maxsize
     
+    A = G.adj_tab()
+
+    def relax( u , v ):
+
+        if min_cost[ u ] + G.edge_val( u , v ) < min_cost[ v ]:
+            min_cost[ v ] = min_cost[ u ] + G.edge_val( u , v )
+            parent[ v ] = u
+
+    while len( min_cost ):
+
+        u = min_cost.pop()
+        for v in A[ u ]:
+            if min_cost[ v ] is None: continue
+            relax( u , v )
+
+            if u == parent[ v ]: yield ( u , v )
+
