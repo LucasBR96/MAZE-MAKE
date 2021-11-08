@@ -1,7 +1,6 @@
 import random
-
-import prim_monitor as prim
-import kruskal_monitor as krus 
+from algos import *
+from data_structures import *
 
 import pygame
 from pygame.locals import *
@@ -21,26 +20,22 @@ PAUSED = True
 
 def solution_generator( V , E , algo ):
 
-    monitor = prim if algo == PRIM else krus
-    monitor._init( V , E )
+    G = GRAPH()
+    G.edges = E
+    G.nodes = V
 
-    cond = True
-    while cond:
-
-        cond = monitor._next( )
-        yield monitor.get_variables( )
+    for u , v in algo( G ):
+        yield u , v
     
-def draw_maze( surf , E ):
+def draw_maze( surf , u , v )
+    
+    i , j = u//COLS , u%COLS
+    p1 = ( TILE*( i + 1 ) , TILE*( j + 1) )
 
-    for u , v in E:
-        
-        i , j = u//COLS , u%COLS
-        p1 = ( TILE*( i + 1 ) , TILE*( j + 1) )
+    i , j = v//COLS , v%COLS
+    p2 = ( TILE*( i + 1 ) , TILE*( j + 1) )
 
-        i , j = v//COLS , v%COLS
-        p2 = ( TILE*( i + 1 ) , TILE*( j + 1) )
-
-        pygame.draw.line( surf , ( 255 , 255 , 255 ) , p1 , p2 )
+    pygame.draw.line( surf , ( 255 , 255 , 255 ) , p1 , p2 )
 
 def maze_init( row , col , seed ):
 
