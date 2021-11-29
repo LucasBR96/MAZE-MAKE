@@ -66,29 +66,42 @@ def Kruskal( G ):
     
 def Dijkstra( G ):
    
-    parent   = { u : None for u in G.nodes }
-
-    min_cost = HEAP_MIN( len( G.nodes ) )
     root = G.rand_node()
+    H = HEAP_MIN( n = len( G.nodes ) )
+    parents = dict()
+
     for u in G.nodes:
-        if u == root: continue
-        min_cost[ u ] = sys.maxsize
-    min_cost[ root ] = 0
-    
+        H[ u ] = sys.maxsize
+        parents[ u ] = None
+    H[ root ] = 0
+
     A = G.Adj_tab()
+    for u in G.nodes:
+        A[ u ].sort( key = lambda v : G.edge_val( u , v ) )
+    
+    def relax( u , v ):
 
-    def relax( u , v , c ):
+        if H[ u ] + G.edge_val( u , v ) < H[ v ]:
+            H[ v ] = G.edge_val( u , v ) + H[ u ]
+            parents[ v ] = u
+            return True
+        return False
+    
+    while H:
 
-        if c + G.edge_val( u , v ) < min_cost[ v ]:
-            min_cost[ v ] = c + G.edge_val( u , v )
-            parent[ v ] = u
-
-    while len( min_cost ):
-
-        u , c = min_cost.pop()
+        u = H.rank2key[ 1 ]
         for v in A[ u ]:
-            if min_cost[ v ] is None: continue
-            relax( u , v , c )
 
-            if u == parent[ v ]: yield ( u , v )
+            if H[ v ] is None: 
+                continue
+            
+            if relax( u , v ):
+                yield u , v
+        
+        H.pop()
+
+
+
+
+            
 
