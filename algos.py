@@ -1,4 +1,4 @@
-from data_structures import GRAPH , FCD , MIN_HEAP
+from data_structures import GRAPH , FCD , HEAP_MIN
 import sys
 from collections import deque
 
@@ -55,13 +55,13 @@ def Kruskal( G ):
         F.make_set( u )
     
     edge_list = list( G.edges.keys() )
-    edge_list.sort( key = lambda ( x , y ): G.edge_val( x , y ) )
+    edge_list.sort( key = lambda e : G.edge_val( e[ 0 ] , e[ 1 ] ) )
     for u , v in edge_list:
 
         A = F[ u ]
         B = F[ v ]
         if A != B:
-            F.merge( u , v )
+            F.merge( A , B )
             yield ( u , v )
     
 def Dijkstra( G ):
@@ -70,25 +70,25 @@ def Dijkstra( G ):
 
     min_cost = HEAP_MIN( len( G.nodes ) )
     root = G.rand_node()
-    min_cost[ root ] = 0
     for u in G.nodes:
         if u == root: continue
         min_cost[ u ] = sys.maxsize
+    min_cost[ root ] = 0
     
-    A = G.adj_tab()
+    A = G.Adj_tab()
 
-    def relax( u , v ):
+    def relax( u , v , c ):
 
-        if min_cost[ u ] + G.edge_val( u , v ) < min_cost[ v ]:
-            min_cost[ v ] = min_cost[ u ] + G.edge_val( u , v )
+        if c + G.edge_val( u , v ) < min_cost[ v ]:
+            min_cost[ v ] = c + G.edge_val( u , v )
             parent[ v ] = u
 
     while len( min_cost ):
 
-        u = min_cost.pop()
+        u , c = min_cost.pop()
         for v in A[ u ]:
             if min_cost[ v ] is None: continue
-            relax( u , v )
+            relax( u , v , c )
 
             if u == parent[ v ]: yield ( u , v )
 

@@ -131,7 +131,7 @@ class FCD:
         
         root = self[ x ]
         rk_sum = 0 
-        while selr.parent[ x ] != root
+        while self.parents[ x ] != root:
             self.parents[ x ] = root
             aux = self.rank[ x ]
             self.rank[ x ] -= rk_sum

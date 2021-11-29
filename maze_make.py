@@ -16,18 +16,15 @@ SLEEP_TIM = 0
 KRUSKAL = 0
 PRIM    = 1
 
-PAUSED = True
+PAUSED = False
 
-def solution_generator( V , E , algo ):
+def solution_generator( G , algo ):
 
-    G = GRAPH()
-    G.edges = E
-    G.nodes = V
-
-    for u , v in algo( G ):
+    foo = Dijkstra if algo == KRUSKAL else DFS
+    for u , v in foo( G ):
         yield u , v
     
-def draw_maze( surf , u , v )
+def draw_maze( surf , u , v ):
     
     i , j = u//COLS , u%COLS
     p1 = ( TILE*( i + 1 ) , TILE*( j + 1) )
@@ -56,7 +53,12 @@ def maze_init( row , col , seed ):
 
         if j < col - 1:
             edges[ ( k , k + 1 ) ] = random.random()
-    return vertices , edges
+    
+    G = GRAPH()
+    G.nodes = vertices
+    G.edges = edges
+
+    return G
 
 def update_maze( ):
 
@@ -65,19 +67,19 @@ def update_maze( ):
     global E
     for x in range( speed ):
         try:
-            _ , E = next( animo )
+            E.add( next( animo ) )
         except StopIteration:
             continue
 
-def main( args ):
+def main():
     
     global ROWS , COLS, E, speed, animo 
 
-    ROWS , COLS , seed , algo = map( int , args )
-    # ROWS , COLS , seed , algo = 80, 160, 87, 1
+    # ROWS , COLS , seed , algo = map( int , args )
+    ROWS , COLS , seed , algo = 80, 160, 87, 0
     ROWS , COLS = COLS , ROWS
-    V , E = maze_init( ROWS , COLS , seed )
-    animo = solution_generator( V , E , algo )
+    G = maze_init( ROWS , COLS , seed )
+    animo = solution_generator( G ,  algo )
     E = set()
     speed = 7
     pygame.init()
@@ -88,13 +90,15 @@ def main( args ):
         surf.fill( ( 0 , 0 , 0 ) )
         
         update_maze( )
-        draw_maze( surf , E )
+        for p1 , p2 in E:
+            draw_maze( surf , p1 , p2 )
 
         for event in pygame.event.get():
             if event.type == QUIT:
                 sys.exit()
                 pygame.quit()
                 return
+
             if event.type == KEYUP and event.key == K_LEFT:
                 speed = min( speed + 1 , 10 )
                 print( speed )
@@ -111,4 +115,4 @@ def main( args ):
         pygame.display.update()
 
 if __name__ == "__main__":
-    main( sys.argv[ 1: ] )
+    main( )

@@ -1,0 +1,10 @@
+ROWS = 0
+COLS = 0
+TILE = 10
+
+SLEEP_TIM = 0
+
+KRUSKAL = 0
+PRIM    = 1
+
+PAUSED = True
