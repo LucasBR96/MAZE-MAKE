@@ -1,6 +1,7 @@
 from data_structures import GRAPH , FCD , HEAP_MIN
 import sys
 from collections import deque
+import random
 
 def DFS( G ):
 
@@ -33,20 +34,23 @@ def WFS( G ):
     A = G.Adj_tab()
     for u in G.nodes:
         A[ u ].sort( key = lambda v : G.edge_val( u , v ) )
+        # random.shuffle( A[ u ] )
 
     pivot = G.rand_node()
-    unvisited = G.nodes - { pivot }
+    parents = { x:None for x in G.nodes }
 
     queue = deque( [ pivot ] )
     while queue:
 
         x = queue.popleft()
-        for y in A[ x ]:
-            if y not in unvisited: continue
-
-            yield ( x , y )
-            unvisited.discard( y )
-            queue.append( y )
+        if not( parents[ x ] is None ):
+            yield ( x , parents[ x ] )
+            
+            
+        for v in A[ x ]:
+            if parents[ v ] is None:
+                parents[ v ] = x
+                queue.append( v )
     
 def Kruskal( G ):
     
