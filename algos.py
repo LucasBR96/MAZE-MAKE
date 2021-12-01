@@ -76,8 +76,6 @@ def Dijkstra( G ):
     H[ root ] = 0
 
     A = G.Adj_tab()
-    for u in G.nodes:
-        A[ u ].sort( key = lambda v : G.edge_val( u , v ) )
     
     def relax( u , v ):
 
@@ -87,17 +85,16 @@ def Dijkstra( G ):
             return True
         return False
     
-    while H:
+    while len( H ):
 
-        u = H.rank2key[ 1 ]
+        u , _ = H.minimum()
+        if not ( parents[ u ] is None ):
+            yield u , parents[ u ]
+
         for v in A[ u ]:
-
-            if H[ v ] is None: 
-                continue
-            
-            if relax( u , v ):
-                yield u , v
-        
+            if H[ v ] is None:
+                continue 
+            relax( u , v )
         H.pop()
 
 

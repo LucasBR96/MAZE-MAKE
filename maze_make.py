@@ -20,7 +20,7 @@ PAUSED = False
 
 def solution_generator( G , algo ):
 
-    foo = Dijkstra if algo == KRUSKAL else DFS
+    foo = WFS if algo == KRUSKAL else Kruskal
     for u , v in foo( G ):
         yield u , v
     
@@ -76,7 +76,7 @@ def main():
     global ROWS , COLS, E, speed, animo 
 
     # ROWS , COLS , seed , algo = map( int , args )
-    ROWS , COLS , seed , algo = 80, 160, 87, 0
+    ROWS , COLS , seed , algo = 80, 160, 6817 , 0
     ROWS , COLS = COLS , ROWS
     G = maze_init( ROWS , COLS , seed )
     animo = solution_generator( G ,  algo )

@@ -174,6 +174,14 @@ class HEAP_MIN:
     
     def __getitem__( self , k ):
         return self.key2val.get( k , None )
+
+    def minimum( self ):
+
+        if not len( self ): return None
+
+        k = self.rank2key[ 1 ]
+        val = self[ k ]
+        return ( k , val )
     
     def __setitem__( self , k , val ):
         
@@ -218,17 +226,28 @@ class HEAP_MIN:
         if self[ x ] is None:
             return
         
-        #--------------------------------------------------
-        # when removing. The key must be pushed to the bottom
-        # of the heap. For that we set its value equal to the
-        # max integer of the system
-        self[ x ] = sys.maxsize
-        t = self.total
-        self.total -= 1
+        #-----------------------------------------------
+        # The idea is to swap the the current entry with the
+        # last one. Remove the current entry, and reposition
+        # the other
 
-        self.rank2key.pop( t )
-        self.key2rank.pop( x )
-        self.key2val.pop( x )
+        t      = self.total
+        k      = self.key2rank[ x ]
+        x_last = self.rank2key[ t ]
+
+        self.key2rank[ x ] = t
+        self.key2rank[ x_last ] = k
+
+        self.rank2key[ k ] = x_last
+        self.rank2key[ t ] = x
+        
+        self.total -= 1
+        del self.rank2key[ t ]
+        del self.key2rank[ x ]
+        del self.key2val[ x ]
+
+        if self.total > 0:
+            self._down( x_last )
 
     def pop( self ):
         
