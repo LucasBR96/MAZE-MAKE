@@ -29,29 +29,6 @@ def DFS( G ):
 
         yield ( x , y )
     
-def WFS( G ):
-
-    A = G.Adj_tab()
-    for u in G.nodes:
-        A[ u ].sort( key = lambda v : G.edge_val( u , v ) )
-        # random.shuffle( A[ u ] )
-
-    pivot = G.rand_node()
-    parents = { x:None for x in G.nodes }
-
-    queue = deque( [ pivot ] )
-    while queue:
-
-        x = queue.popleft()
-        if not( parents[ x ] is None ):
-            yield ( x , parents[ x ] )
-            
-            
-        for v in A[ x ]:
-            if parents[ v ] is None:
-                parents[ v ] = x
-                queue.append( v )
-    
 def Kruskal( G ):
     
     F = FCD( len( G.nodes ) )
@@ -100,7 +77,6 @@ def Dijkstra( G ):
                 continue 
             relax( u , v )
         H.pop()
-
 
 
 

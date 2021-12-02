@@ -20,7 +20,7 @@ PAUSED = False
 
 def solution_generator( G , algo ):
 
-    foo = WFS if algo == KRUSKAL else Kruskal
+    foo = Kruskal if algo == KRUSKAL else Kruskal
     for u , v in foo( G ):
         yield u , v
     
@@ -44,15 +44,16 @@ def maze_init( row , col , seed ):
     vertices = set()
     edges = dict()
 
+    bias = .4
     for k in range ( row*col ):
         vertices.add( k )
 
         i , j = k//col , k%col
         if i < row - 1:
-            edges[ ( k , k + col ) ] = random.random()
+            edges[ ( k , k + col ) ] = random.random() + 1 - bias
 
         if j < col - 1:
-            edges[ ( k , k + 1 ) ] = random.random()
+            edges[ ( k , k + 1 ) ] = random.random() + bias
     
     G = GRAPH()
     G.nodes = vertices
@@ -81,7 +82,7 @@ def main():
     G = maze_init( ROWS , COLS , seed )
     animo = solution_generator( G ,  algo )
     E = set()
-    speed = 7
+    speed = 5
     pygame.init()
     surf = pygame.display.set_mode( ( (ROWS+1)*TILE , (COLS+1)*TILE ) )
 
