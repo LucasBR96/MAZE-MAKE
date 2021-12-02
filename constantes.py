@@ -1,10 +1,22 @@
-ROWS = 0
-COLS = 0
+#Maze Dimensions
+ROWS = 80
+COLS = 160
 TILE = 10
+SCREEN_W = ( COLS + 2 )*TILE
+SCREEN_H = ( ROWS + 2 )*TILE
 
+#Rendering speed
 SLEEP_TIM = 0
+SPEED     = 2
 
-KRUSKAL = 0
-PRIM    = 1
+#Colors
+BACKGROUND_COLOR = ( 0 , 0 , 0 )
+FOREGROUND_COLOR = ( 255 , 255 , 255 )
 
+#Algorithms
+KRUSKAL  = 0
+DIJKSTRA = 1
+RND_DFS  = 2
+
+BIAS     = .6
 PAUSED = True
