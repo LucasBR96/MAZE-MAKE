@@ -11,13 +11,25 @@ from data_structures import *
 from constantes import *
 from utils import *
 
+def check_delay():
+
+    t = time.time()
+    global last_t
+    a = ( t - last_t > delay )
+    if a:
+        last_t = t
+    return a 
+
 def update_maze( ):
 
-    for _ in range( SPEED ):
-        try:
-            E.add( next( animo ) )
-        except StopIteration:
-            break
+    if not check_delay():
+        return
+
+    try:
+        E.add( next( animo ) )
+    except StopIteration:
+        return
+    
     
 def draw_maze():
     
@@ -35,6 +47,10 @@ def draw_maze():
         pygame.draw.line( surf , FOREGROUND_COLOR , t1 , t2 )
 
 def init_globals():
+
+    global last_t , delay
+    last_t = time.time()
+    delay = SLEEP_TIM/( 2**( SPEED - 1 ) )
 
     global surf
     surf = pygame.display.set_mode( ( SCREEN_W , SCREEN_H ) )
